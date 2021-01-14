@@ -16,7 +16,7 @@ class PhotoContainer extends Component {
     }
     return (
       <div className="photo-container">
-        <h2>Results</h2>
+        <h2>{this.props.title}</h2>
         <ul>
           {photos}
         </ul>

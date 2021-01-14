@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import {
+  BrowserRouter,
+  Route,
+  Switch
+} from 'react-router-dom';
 import apiKey from './config';
 import axios from 'axios';
 
@@ -11,36 +16,54 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      photos: []
+      photos: [],
+      cats: [],
+      dogs: [],
+      computers: [],
+      loading: true
     };
   }
 
   componentDidMount() {
-    axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=cats&per_page=24&format=json&nojsoncallback=1`) 
+    this.performSearch('cats');
+    this.performSearch('dogs');
+    this.performSearch('computers');
+    this.performSearch();
+  }
+
+  performSearch(query = 'cars') {
+    axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`) 
       .then(response => {
-        this.setState({
-          photos: response.data.photos.photo
-        });
+        if (query === 'cats' || query === 'dogs' || query === 'computers') {
+          this.setState({
+            [query]: response.data.photos.photo
+          })
+        } else {
+          this.setState({
+            photos: response.data.photos.photo,
+            loading: false
+          });
+        }
       })
       .catch(error => {
         console.log("Error fetching and parsing data", error);
       })
   }
 
-  //probably best this ends up in container so that i can pass
-  // all data including id for each picture
-  createPhotos = (data) => {
-    const photos = data.photos.photo.map(photo => `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`);
-    return photos;
-  }
-
   render() {
     return (
-      <div>
-        <SearchForm />
-        <Navigation />
-        <PhotoContainer data={this.state.photos}/>
-      </div>
+      <BrowserRouter>
+        <div>
+          <SearchForm onSearch={this.performSearch} />
+          <Navigation />
+          <Switch>
+            <Route path="/cats" render={() => <PhotoContainer title='Cats' data={this.state.cats} /> } />
+            <Route path="/dogs" render={() => <PhotoContainer title='Dogs' data={this.state.dogs} /> } />
+            <Route path="/computers" render={() => <PhotoContainer title='Computers' data={this.state.computers} /> } />
+          </Switch>
+          
+        </div>
+      </BrowserRouter>
     );
   }
 }
