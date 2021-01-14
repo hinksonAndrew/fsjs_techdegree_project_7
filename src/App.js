@@ -4,19 +4,34 @@ import axios from 'axios';
 
 import SearchForm from './SearchForm';
 import Navigation from './Navigation';
-// import NotFound from './NotFound';
 import PhotoContainer from './PhotoContainer';
 
 class App extends Component {
 
+  constructor() {
+    super();
+    this.state = {
+      photos: []
+    };
+  }
+
   componentDidMount() {
-    axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=cats&per_page=24&format=json&nojsoncallback=1`)
+    axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=cats&per_page=24&format=json&nojsoncallback=1`) 
       .then(response => {
-        console.log(response.data.photos.photo);
+        this.setState({
+          photos: response.data.photos.photo
+        });
       })
       .catch(error => {
         console.log("Error fetching and parsing data", error);
       })
+  }
+
+  //probably best this ends up in container so that i can pass
+  // all data including id for each picture
+  createPhotos = (data) => {
+    const photos = data.photos.photo.map(photo => `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`);
+    return photos;
   }
 
   render() {
@@ -24,7 +39,7 @@ class App extends Component {
       <div>
         <SearchForm />
         <Navigation />
-        <PhotoContainer />
+        <PhotoContainer data={this.state.photos}/>
       </div>
     );
   }
