@@ -1,9 +1,21 @@
 import React, {Component} from 'react';
 
+/**
+ * Components
+ */
 import Photo from './Photo';
 import NotFound from './NotFound';
 
+/**
+ * Gets the results from the performSearch in app.js and
+ * maps each item in reslts to photo.js to then render
+ * the group of completed photos to page. If no results
+ * then page lets user know to try again or return to /cats.
+ */
 class PhotoContainer extends Component {
+
+  
+
   render() {
     const results = this.props.data;
     let photos;

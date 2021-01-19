@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom';
 
+/**
+ * Based on what is inputed to search from on page the path
+ * is given to the onSearch prop to perfom search on phrase 
+ * and to also let app.js route to correct page.
+ */
 class SearchForm extends Component {
 
   state = {
-    searchText: '',
-    search: true
+    searchText: ''
   }
 
   onSearchChange = e => {
@@ -16,17 +20,9 @@ class SearchForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.search) {
-      let path = `/search/${this.state.searchText}`;
-      this.props.history.push(path);
-      this.setState({search: false});
-      this.props.onSearch(this.state.searchText);
-    } else {
-      let path = `/${this.state.searchText}`;
-      this.setState({search: true});
-      this.props.history.push(path);
-    }
-    
+    let path = `/search/${this.state.searchText}`;
+    this.props.history.push(path);
+    this.props.onSearch(this.state.searchText);
     e.currentTarget.reset();
   }
 

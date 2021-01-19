@@ -1,3 +1,13 @@
+# Treehouse TechDegree Project 7
+React Gallery App
+This app uses React to request 24 images from flickr that matches a search term provided by user or the three choosen keywords: cats, dogs, and computers.
+
+I was going for exceeds but I cant seem to get the loading
+screen to show up everytime new images are searched for. 
+I am pretty sure it has something to do with how I wrote the code here but I am ok with meets expectations. I will revisit once I look through my code again.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
