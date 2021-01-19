@@ -20,28 +20,32 @@ class App extends Component {
       cats: [],
       dogs: [],
       computers: [],
-      loading: true
+      loading: true,
+      search: true
     };
+    this.performSearch = this.performSearch.bind(this);
   }
 
   componentDidMount() {
     this.performSearch('cats');
     this.performSearch('dogs');
     this.performSearch('computers');
-    this.performSearch();
   }
 
-  performSearch(query = 'cars') {
+  performSearch(query) {
     axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`) 
       .then(response => {
         if (query === 'cats' || query === 'dogs' || query === 'computers') {
           this.setState({
-            [query]: response.data.photos.photo
+            [query]: response.data.photos.photo,
+            loading: false,
+            search: true
           })
         } else {
           this.setState({
             photos: response.data.photos.photo,
-            loading: false
+            loading: false,
+            search: false
           });
         }
       })
@@ -54,12 +58,13 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div>
-          <SearchForm onSearch={this.performSearch} />
+          <SearchForm onSearch={this.performSearch} search={this.state.search} />
           <Navigation />
           <Switch>
             <Route path="/cats" render={() => <PhotoContainer title='Cats' data={this.state.cats} /> } />
             <Route path="/dogs" render={() => <PhotoContainer title='Dogs' data={this.state.dogs} /> } />
             <Route path="/computers" render={() => <PhotoContainer title='Computers' data={this.state.computers} /> } />
+            <Route path="/search/:term" render={() => <PhotoContainer title='Search Results' data={this.state.photos} /> } />
           </Switch>
           
         </div>
